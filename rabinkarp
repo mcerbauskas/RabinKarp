@@ -1,0 +1,82 @@
+public class Main 
+2 {
+3     // d is the number of characters in input alphabet
+4     public final static int d = 256;
+5      
+6     /* pat –> pattern
+7         txt –> text
+8         q –> A prime number
+9     */
+10    static void search(String pat, String txt, int q)
+11    {
+12        int M = pat.length();
+13        int N = txt.length();
+14        int i, j;
+15        int p = 0; // hash value for pattern
+16        int t = 0; // hash value for txt
+17        int h = 1;
+18     
+19        // The value of h would be "pow(d, M–1)%q"
+20        for (i = 0; i < M–1; i++)
+21            h = (h*d)%q;
+22     
+23        // Calculate the hash value of pattern and first
+24        // window of text
+25        for (i = 0; i < M; i++)
+26        {
+27            p = (d*p + pat.charAt(i))%q;
+28            t = (d*t + txt.charAt(i))%q;
+29        }
+30     
+31        // Slide the pattern over text one by one
+32        for (i = 0; i <= N – M; i++)
+33        {
+34     
+35            // Check the hash values of current window of text
+36            // and pattern. If the hash values match then only
+37            // check for characters on by one
+38            if ( p == t )
+39            {
+40                /* Check for characters one by one */
+41                for (j = 0; j < M; j++)
+42                {
+43                    if (txt.charAt(i+j) != pat.charAt(j))
+44                        break;
+45                }
+46     
+47                // if p == t and pat[0...M–1] = txt[i, i+1, ...i+M–1]
+48                if (j == M)
+49                    System.out.println("Pattern found at index " + i);
+50            }
+51     
+52            // Calculate hash value for next window of text: Remove
+53            // leading digit, add trailing digit
+54            if ( i < N–M )
+55            {
+56                t = (d*(t – txt.charAt(i)*h) + txt.charAt(i+M))%q;
+57     
+58                // We might get negative value of t, converting it
+59                // to positive
+60                if (t < 0)
+61                t = (t + q);
+62            }
+63        }
+64    }
+65     
+66    /* Driver program to test above function */
+67    public static void main(String[] args)
+68    {
+69        String txt = "TEKSTAS SKIRTAS PATIKRINTI RABIN KARP ALGORITMO VEIKIMA";
+70        String pat = "ALG";
+71        int q = 101; // A prime number
+72        search(pat, txt, q);
+73    }
+74}
+/***************************************************************************************
+*    Title: Searching for Patterns | Set 3 (Rabin–Karp Algorithm)
+*    Author: geeksforgeeks.org
+*    Date: 2011.02.05
+*    Code version: 1.0
+*    Availability: https://www.geeksforgeeks.org/searching–for–patterns–set–3–rabin–karp–algorithm/
+*
+***************************************************************************************/
